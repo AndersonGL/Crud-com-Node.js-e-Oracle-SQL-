@@ -1,5 +1,5 @@
 # Crud-com-Node.js-e-Oracle-SQL-
-Fazendo a conexão node com databas oracle.
+Fazendo a conexão node com database oracle.
 
 - mkdir crud-oracle-node
 - cd crud-oracle-node
