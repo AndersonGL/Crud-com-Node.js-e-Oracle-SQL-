@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD de Usuários</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>👤 CRUD de Usuários</h1>
+
+    <div id="msg" class="msg"></div>
+
+    <div class="form">
+      <input type="hidden" id="id">
+
+      <input id="nome" placeholder="Nome">
+      <input id="email" placeholder="Email">
+
+      <button type="button" id="btnSalvar">Salvar</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-usuarios"></tbody>
+    </table>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
