@@ -6,8 +6,14 @@ Este é um projeto simples de API REST para realizar operações de CRUD (Create
 
 * **Node.js**
 * **Express** (Framework Web)
+* **Oracle Database** (Banco de dados)
+* **Sequelize** (ORM para Node.js)  
+* **Oracle SQL Developer** (Interface para gerenciar o banco de dados)
+* **Postman** (Interface para testar as rotas)
+* **Git** (Controle de versão)
+* **GitHub** (Repositório remoto)
 * **node-oracledb** (Driver oficial da Oracle para Node.js)
-* **dotenv** (Gerenciamento de variáveis de ambiente)
+* **dotenv** (Gerenciamento de variáveis de ambiente),
 
 ## 📁 Estrutura de Pastas
 

@@ -1,19 +1,15 @@
 {
-  "name": "crud-oracle-node",
+  "name": "node-oracle-crud",
   "version": "1.0.0",
-  "description": "Este é um projeto simples de API REST para realizar operações de CRUD (Create, Read, Update, Delete) em uma tabela de usuários dentro de um banco de dados Oracle.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "oracledb": "^6.10.0"
+    "body-parser": "^2.2.2",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "oracledb": "^5.5.0",
+    "sequelize": "^6.37.7"
   }
 }

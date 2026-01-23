@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Oracle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="card form-card">
+      <h1>Cadastro de Usuário</h1>
+      <form id="userForm">
+        <input type="hidden" name="id" id="userId">
+        <div class="input-group">
+          <input type="text" name="name" placeholder="Nome" required>
+        </div>
+        <div class="input-group">
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <input type="number" name="age" placeholder="Idade">
+        </div>
+        <button type="submit" id="submitBtn">Cadastrar</button>
+      </form>
+    </div>
+
+    <div class="card list-card">
+      <h2>Usuários Cadastrados</h2>
+      <ul id="userList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("userForm");
+    const list = document.getElementById("userList");
+    const submitBtn = document.getElementById("submitBtn");
+
+    async function fetchUsers() {
+      try {
+        const res = await fetch("/users");
+        const users = await res.json();
+        list.innerHTML = users.map(u => `
+          <li class="user-item">
+            <div class="user-details">
+              <span class="user-info"><strong>${u.name}</strong> (${u.age || 'N/A' } anos)</span>
+              <span class="user-email">${u.email}</span>
+              <span class="user-id">ID: ${u.id}</span>
+            </div>
+            <div class="btn-group">
+                <button class="edit-btn" onclick='editUser(${JSON.stringify(u)})'>Editar</button>
+                <button class="delete-btn" onclick="deleteUser(${u.id})">Excluir</button>
+            </div>
+          </li>
+        `).join("");
+      } catch (err) {
+        console.error("Erro ao buscar usuários", err);
+      }
+    }
+
+    function editUser(user) {
+      form.name.value = user.name;
+      form.email.value = user.email;
+      form.age.value = user.age || "";
+      form.id.value = user.id;
+      submitBtn.textContent = "Salvar Alterações";
+    }
+
+    async function deleteUser(id) {
+      if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
+
+      try {
+        const res = await fetch(`/users/${id}`, { method: "DELETE" });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || "Erro no servidor");
+        }
+        fetchUsers();
+      } catch (err) {
+        alert("Erro ao excluir: " + err.message);
+        console.error(err);
+      }
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const id = formData.get("id");
+
+      try {
+        if (id) {
+            await fetch(`/users/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            alert("Usuário atualizado com sucesso!");
+        } else {
+            await fetch("/users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+        }
+        
+        form.reset();
+        form.id.value = "";
+        submitBtn.textContent = "Cadastrar";
+        fetchUsers();
+      } catch (err) {
+        alert("Erro ao salvar usuário");
+      }
+    });
+
+    fetchUsers();
+  </script>
+</body>
+</html>
+
