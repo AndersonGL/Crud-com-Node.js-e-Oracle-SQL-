@@ -1,123 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRUD Oracle</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle Node.js CRUD</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="app-container">
-    <div class="card form-card">
-      <h1>Cadastro de Usuário</h1>
-      <form id="userForm">
-        <input type="hidden" name="id" id="userId">
-        <div class="input-group">
-          <input type="text" name="name" placeholder="Nome" required>
-        </div>
-        <div class="input-group">
-          <input type="email" name="email" placeholder="Email" required>
-        </div>
-        <div class="input-group">
-          <input type="number" name="age" placeholder="Idade">
-        </div>
-        <button type="submit" id="submitBtn">Cadastrar</button>
-      </form>
+    <div class="container">
+        <header>
+            <h1>Gerenciamento de Usuários</h1>
+            <p>Node.js + Oracle Database</p>
+        </header>
+
+        <main>
+            <section class="form-section">
+                <div class="card glass">
+                    <h2 id="form-title">Novo Usuário</h2>
+                    <form id="user-form">
+                        <input type="hidden" id="user-id">
+                        
+                        <div class="form-group">
+                            <label for="name">Nome</label>
+                            <input type="text" id="name" required placeholder="Digite o nome completo">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required placeholder="Digite o email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="age">Idade</label>
+                            <input type="number" id="age" min="0" max="150" placeholder="Idade">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="btn-save">Salvar</button>
+                            <button type="button" class="btn btn-secondary" id="btn-cancel" style="display: none;">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="list-section">
+                <div class="card glass">
+                    <div class="list-header">
+                        <h2>Usuários Cadastrados</h2>
+                        <button id="btn-refresh" class="btn btn-icon" title="Atualizar Lista">↻</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Idade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Users will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="loading" class="loading hidden">Carregando...</div>
+                    <div id="empty-state" class="empty-state hidden">Nenhum usuário encontrado.</div>
+                </div>
+            </section>
+        </main>
     </div>
+    
+    <div id="toast" class="toast hidden">Notificação</div>
 
-    <div class="card list-card">
-      <h2>Usuários Cadastrados</h2>
-      <ul id="userList"></ul>
-    </div>
-  </div>
-
-  <script>
-    const form = document.getElementById("userForm");
-    const list = document.getElementById("userList");
-    const submitBtn = document.getElementById("submitBtn");
-
-    async function fetchUsers() {
-      try {
-        const res = await fetch("/users");
-        const users = await res.json();
-        list.innerHTML = users.map(u => `
-          <li class="user-item">
-            <div class="user-details">
-              <span class="user-info"><strong>${u.name}</strong> (${u.age || 'N/A' } anos)</span>
-              <span class="user-email">${u.email}</span>
-              <span class="user-id">ID: ${u.id}</span>
-            </div>
-            <div class="btn-group">
-                <button class="edit-btn" onclick='editUser(${JSON.stringify(u)})'>Editar</button>
-                <button class="delete-btn" onclick="deleteUser(${u.id})">Excluir</button>
-            </div>
-          </li>
-        `).join("");
-      } catch (err) {
-        console.error("Erro ao buscar usuários", err);
-      }
-    }
-
-    function editUser(user) {
-      form.name.value = user.name;
-      form.email.value = user.email;
-      form.age.value = user.age || "";
-      form.id.value = user.id;
-      submitBtn.textContent = "Salvar Alterações";
-    }
-
-    async function deleteUser(id) {
-      if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
-
-      try {
-        const res = await fetch(`/users/${id}`, { method: "DELETE" });
-        if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.error || "Erro no servidor");
-        }
-        fetchUsers();
-      } catch (err) {
-        alert("Erro ao excluir: " + err.message);
-        console.error(err);
-      }
-    }
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      const id = formData.get("id");
-
-      try {
-        if (id) {
-            await fetch(`/users/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-            alert("Usuário atualizado com sucesso!");
-        } else {
-            await fetch("/users", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-        }
-        
-        form.reset();
-        form.id.value = "";
-        submitBtn.textContent = "Cadastrar";
-        fetchUsers();
-      } catch (err) {
-        alert("Erro ao salvar usuário");
-      }
-    });
-
-    fetchUsers();
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
-
