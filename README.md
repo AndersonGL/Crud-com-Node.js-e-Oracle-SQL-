@@ -48,8 +48,8 @@ A estrutura de diretórios foi organizada para separar as responsabilidades, seg
 
 ```bash
 # (Exemplo, já que você receberá o projeto em um .zip)
-git clone https://github.com/seu-usuario/nodejs-oracle-crud.git
-cd nodejs-oracle-crud
+git clone https://github.com/AndersonGL/Crud-com-Node.js-e-Oracle-SQL-.git
+cd Crud-com-Node.js-e-Oracle-SQL-
 ```
 
 ### 2. Instale as Dependências
