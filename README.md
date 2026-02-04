@@ -57,7 +57,7 @@ cd Crud-com-Node.js-e-Oracle-SQL-
 Execute o comando abaixo na raiz do projeto para instalar todas as bibliotecas necessárias listadas no `package.json`.
 
 ```bash
-npm install
+npm install ou yarn install
 ```
 
 ### 3. Configure o Banco de Dados
@@ -94,7 +94,7 @@ POOL_INCREMENT=1
 Para iniciar o servidor em modo de desenvolvimento (com reinicialização automática ao salvar arquivos), use:
 
 ```bash
-npm run dev
+npm run dev ou yarn rum dev
 ```
 
 Para iniciar em modo de produção:
